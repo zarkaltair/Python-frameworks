@@ -1,0 +1,101 @@
+a {
+	color: red;
+	font-size: 14px;
+}
+
+div {
+	color: #FAA716;
+}
+
+#my_link {
+	color: lime;
+}
+
+#test_link {
+	font-size: 20px;
+	color: #8737FF;
+}
+
+.Hu {
+	color: blue;
+}
+
+.An {
+	color: lime;
+}
+
+.lion {
+	color: gold;
+}
+
+.monkey {
+	color: green;
+}
+
+.fish {
+	color: black;
+}
+
+.message {
+	color: #747474;
+	background-color: #E4E4E4;
+	border: 1px solid #323232;
+	font-size: 20px;
+	margin-left: 50px;
+	margin-right: 50px;
+	margin-bottom: 15px;
+	padding: 15px;
+
+}
+
+.success {
+	background-color: green;
+	color: #ffffff;
+}
+
+.fail {
+	background-color: red;
+	color: #ffffff;
+}
+
+.info {
+	background-color: blue;
+	color: #ffffff;
+}
+
+.warning {
+	background-color: gold;
+	color: #000000;
+}
+
+.message:hover {
+	border: 10px solid #323232;
+}
+
+#test {
+	transform: scale(0.5);
+	transition: 1.0s all;
+	background-color: #fff;
+	color: #333;
+	padding: 15px;
+	margin: 15px;
+	border: 2px solid #2F3841;
+	border-radius: 100px;
+	opacity: 0.8;
+	box-shadow: 10px 10px 10px #000000;
+	width: 100%;
+	display: block;
+	text-align: center;
+	font-size: 50px;
+	font-weight: 900px;
+
+}
+
+body {
+	background-image: url(img/matrix.png);
+}
+
+#test:hover {
+	transform: scale(0.55);
+	background-color: green;
+}
