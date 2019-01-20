@@ -11,7 +11,7 @@ pd.options.display.max_columns = 20
 pd.options.display.expand_frame_repr = False
 
 
-calls_df = pd.read_html("https://www.fnb.co.za/Controller?nav=rates.forex.list.ForexRatesList",) #header={'User-Agent': 'Mozilla/5.0'})
+calls_df = pd.read_html("https://www.fnb.co.za/Controller?nav=rates.forex.list.ForexRatesList",) # header={'User-Agent': 'Mozilla/5.0'})
 print(calls_df)
 
 

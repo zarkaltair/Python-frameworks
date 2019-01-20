@@ -5,21 +5,26 @@ a = np.array([1, 4, 5, 8], float)
 
 print(a)
 print(type(a))
+print()
 
 a = np.array([[1, 2, 3], [4, 5, 6]], float)
 
 print(a)
 print(a[1,:])
+print()
 print('Метод shape возвращает количество строк и столбцов в матрице:', a.shape)
 print('Числовой тип данных в NumPy -', a.dtype)
 print('Метод len возвращает длину первого измерения (оси):', len(a))
 print('Метод in используется для проверки на наличие элемента в массиве:', 2 in a)
+print()
 
 a = np.array(range(10), float)
 
 print(a)
+print()
 a = a.reshape((5, 2)) # метод reshape создает новый массив, а не модифицирует оригинальный.
 print(a)
+print()
 
 a = np.array([1, 2, 3], float)
 a = a.tolist()
