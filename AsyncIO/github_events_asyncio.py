@@ -5,7 +5,7 @@ import urllib.request
 
 
 URL = 'https://api.github.com/events'
-MAX_CLIENTS = 10
+MAX_CLIENTS = 3
 
 
 def fetch_sync(pid):
