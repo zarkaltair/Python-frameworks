@@ -18,8 +18,10 @@
 # print(calls_df)
 
 
-
+import requests
 import pandas as pd
+
+from bs4 import BeautifulSoup
 
 
 pd.options.display.max_rows = 200
@@ -27,8 +29,17 @@ pd.options.display.max_columns = 20
 pd.options.display.expand_frame_repr = False
 
 
-calls_df = pd.read_html("https://free-proxy-list.net/")
-print(calls_df)
+response = requests.get("https://free-proxy-list.net/")
+html = response.text
+soup = BeautifulSoup(html, 'lxml')
+# print(soup)
+table = soup.find('table', class_='table')
+# print(table)
+tr = table.find('tr', class_='odd')
+print(tr)
+
+# calls_df = pd.read_html(table)
+# print(calls_df)
 
 
 
