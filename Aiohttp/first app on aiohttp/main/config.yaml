@@ -1,0 +1,5 @@
+# Our default configuration file
+
+site_name: 'My first site on aiohttp'
+
+database_uri: postgresql://localhost:5432/demo
