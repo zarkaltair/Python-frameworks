@@ -16,7 +16,7 @@ async def fetch_content(url, session):
 		write_image(data)
 
 
-async def main2():
+async def main():
 	url = 'https://loremflickr.com/320/240'
 	tasks = []
 
@@ -30,5 +30,5 @@ async def main2():
 
 if __name__ == '__main__':
 	t0 = time()
-	asyncio.run(main2())
+	asyncio.run(main())
 	print(time() - t0)
