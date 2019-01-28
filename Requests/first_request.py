@@ -1,15 +1,15 @@
 import requests
 
 
-url = 'https://jsonplaceholder.typicode.com/posts' # https://httpbin.org/get
+url = 'https://loremflickr.com/320/240' # https://httpbin.org/get # 'https://loremflickr.com/320/240', allow_redirects=True # https://jsonplaceholder.typicode.com/posts
 
-response = requests.get(url)
+response = requests.get(url, allow_redirects=True)
 
 print(response)
 print()
-# print(response.content)
+print(response.content)
 print()
-print(response.json())
+# print(response.json())
 print()
 # print(response.headers)
 print()
