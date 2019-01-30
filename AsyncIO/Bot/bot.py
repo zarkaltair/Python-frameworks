@@ -1,3 +1,4 @@
+# Add all libraries for the bot
 import asyncio
 import logging
 import pyowm
@@ -17,34 +18,40 @@ from config import TOKEN
 from config import PROXY_URL
 
 
+# Create log string
 logging.basicConfig(format=u'%(filename)s [ LINE:%(lineno)+3s ]#%(levelname)+8s [%(asctime)s]  %(message)s', level=logging.INFO)
 
+# pass to bot token and proxy url
 bot = Bot(token=TOKEN, proxy=PROXY_URL)
 dp = Dispatcher(bot)
 
-CAT_BIG_EYES = 'AgADAgAD_KoxG9VJMEqByuFKwZlSkG9lXw8ABCdYNkU_W2ZmWgkBAAEC'
-KITTENS = [
-    	'AgADAgAD_aoxG9VJMEoIiQjQLgjpcONKXw8ABMOanJERB_J2zw0BAAEC',
-    	'AgADAgAD_qoxG9VJMEqTwmaPrmhXKmF6Xw8ABIq2wgu_QkBM-goBAAEC',
-    	'AgADAgAD_6oxG9VJMErIQz69tr_T_YJJXw8ABJdloSdtDWQkGg0BAAEC',
-]
-VOICE = 'AwADAgAD4QIAAtVJMEr4Bi9pw4knCQI'
-VIDEO = 'BAADAgAD4gIAAtVJMEqg74p_y4OvdgI'
-TEXT_FILE = 'BQADAgAD3wIAAtVJMEqvW4ozbMQXhAI'
-VIDEO_NOTE = 'DQADAgAD4AIAAtVJMEp6uTbz3KrD_gI'
+
+# CAT_BIG_EYES = 'AgADAgAD_KoxG9VJMEqByuFKwZlSkG9lXw8ABCdYNkU_W2ZmWgkBAAEC'
+# KITTENS = [
+#     	'AgADAgAD_aoxG9VJMEoIiQjQLgjpcONKXw8ABMOanJERB_J2zw0BAAEC',
+#     	'AgADAgAD_qoxG9VJMEqTwmaPrmhXKmF6Xw8ABIq2wgu_QkBM-goBAAEC',
+#     	'AgADAgAD_6oxG9VJMErIQz69tr_T_YJJXw8ABJdloSdtDWQkGg0BAAEC',
+# ]
+# VOICE = 'AwADAgAD4QIAAtVJMEr4Bi9pw4knCQI'
+# VIDEO = 'BAADAgAD4gIAAtVJMEqg74p_y4OvdgI'
+# TEXT_FILE = 'BQADAgAD3wIAAtVJMEqvW4ozbMQXhAI'
+# VIDEO_NOTE = 'DQADAgAD4AIAAtVJMEp6uTbz3KrD_gI'
 
 
+# Create function which process connand /start
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     await message.reply('Привет!\nИспользуй /help, чтобы узнать список доступных команд!')
 
 
+# Create function which process connand /help
 @dp.message_handler(commands=['help'])
 async def process_help_command(message: types.Message):
     msg = text('Я могу ответить на следующие команды:', '/weather', '/rates', '/top', '/mk', '/new_year', '/random_image', '/lambo', '/fibo10', '/gas', '/celebrations', '/goodbye', sep='\n')
     await message.reply(msg, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /weather
 @dp.message_handler(commands=['weather'])
 async def process_weather_command(message: types.Message):
     town_M = 'Москва'
@@ -92,6 +99,7 @@ async def process_weather_command(message: types.Message):
     await bot.send_message(message.chat.id, msg, reply_to_message_id=message.message_id, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /rates
 @dp.message_handler(commands=['rates'])
 async def process_rates_command(message: types.Message):
     URL_FOR_RATES = 'https://openexchangerates.org/api/latest.json?app_id=3314f836fa864cb39c496105697a6d7f'
@@ -106,6 +114,7 @@ async def process_rates_command(message: types.Message):
     await bot.send_message(message.chat.id, msg, reply_to_message_id=message.message_id, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /top
 @dp.message_handler(commands=['top'])
 async def process_top_command(message: types.Message):
     url = 'https://api.coinmarketcap.com/v1/ticker'
@@ -134,6 +143,7 @@ async def process_top_command(message: types.Message):
     await bot.send_message(message.chat.id, msg, reply_to_message_id=message.message_id, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /mk
 @dp.message_handler(commands=['mk'])
 async def process_mk_command(message: types.Message):
     global_url = 'https://api.coinmarketcap.com/v2/global/?convert=USD'
@@ -152,6 +162,7 @@ async def process_mk_command(message: types.Message):
     await bot.send_message(message.chat.id, msg, reply_to_message_id=message.message_id, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /new_year
 @dp.message_handler(commands=['new_year'])
 async def process_new_year_command(message: types.Message):
     countdown = lambda : datetime.datetime(2020,1,1,00,00) - datetime.datetime.now().replace(microsecond=0)
@@ -159,6 +170,7 @@ async def process_new_year_command(message: types.Message):
     await bot.send_message(message.chat.id, msg, reply_to_message_id=message.message_id, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /fibo10
 @dp.message_handler(commands=['fibo10'])
 async def process_fibo10_command(message: types.Message):
     a, b = 0, 1
@@ -172,6 +184,7 @@ async def process_fibo10_command(message: types.Message):
     await bot.send_message(message.chat.id, msg, reply_to_message_id=message.message_id, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /gas
 @dp.message_handler(commands=['gas'])
 async def process_gas_command(message: types.Message):
     response = requests.get('https://ethgasstation.info')
@@ -183,6 +196,7 @@ async def process_gas_command(message: types.Message):
     await bot.send_message(message.chat.id, msg, reply_to_message_id=message.message_id, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /celebrations
 @dp.message_handler(commands=['celebrations'])
 async def process_celebrations_command(message: types.Message):
     html = requests.get('http://kakoysegodnyaprazdnik.ru/').text
@@ -193,28 +207,31 @@ async def process_celebrations_command(message: types.Message):
     await bot.send_message(message.chat.id, msg, reply_to_message_id=message.message_id, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /random_image
 @dp.message_handler(commands=['random_image'])
 async def process_random_image_command(message: types.Message):
     msg = requests.get('https://loremflickr.com/1280/720/random', allow_redirects=True).content
     await bot.send_photo(message.chat.id, msg, reply_to_message_id=message.message_id, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /lambo
 @dp.message_handler(commands=['lambo'])
 async def process_lambo_command(message: types.Message):
     msg = requests.get('https://loremflickr.com/1280/720/lambo', allow_redirects=True).content
     await bot.send_photo(message.chat.id, msg, reply_to_message_id=message.message_id, parse_mode=ParseMode.HTML)
 
 
+# Create function which process connand /goodbye
 @dp.message_handler(commands=['goodbye'])
 async def process_goodbye_command(message: types.Message):
     message_text = pre(emojize('Давай покеда! :sunglasses:'))
     await bot.send_message(message.chat.id, message_text, parse_mode=ParseMode.MARKDOWN)
 
 
+# Create function which process another connand
 @dp.message_handler(regexp=r"/(.+)")
 async def process_crypto_ticker_command(message: types.Message):
     url = 'https://api.coinmarketcap.com/v1/ticker{}'.format(message['text'])
-    print(url)
     result = requests.get(url).json()
     name = result[0] ['name']
     symbol = result[0] ['symbol']
@@ -229,12 +246,13 @@ async def process_crypto_ticker_command(message: types.Message):
     msg = '<code>{0:20}{1}\n{2:20}#{3}\n{4:20}{5}\n{6:20}${7}\n{8:20}${9}\n{10:20}{11}%\n{12:20}{13}%\n{14:20}{15}%</code>'.format('Coin name:', name,'Market ticker:', symbol, 'Price BTC:', price_btc, 'Price USD:', price, 'Market cap:', market, 'Change 1h:', change_1h, 'Change 24h:', change_24h, 'Change 7d:', change_7d )
     await bot.send_message(message.chat.id, msg, parse_mode=ParseMode.HTML)
 
-
+# Create function which process any text message from user
 @dp.message_handler()
 async def echo_message(msg: types.Message):
     await bot.send_message(msg.chat.id, msg.text)
 
 
+# Create function which process any message from user
 @dp.message_handler(content_types=ContentType.ANY)
 async def unknown_message(msg: types.Message):
     message_text = text(emojize('Я не знаю, что с этим делать :astonished:'),
