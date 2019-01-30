@@ -17,8 +17,4 @@ def load_config(config_file=None):
 		cf_dict = yaml.safe_load(config_file)
 
 	config.update(**cf_dict)
-
 	return config
-
-
-
