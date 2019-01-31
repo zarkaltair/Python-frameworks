@@ -1,7 +1,7 @@
 # Add all libraries for the bot
+import pyowm
 import asyncio
 import logging
-import pyowm
 import requests
 import datetime
 
@@ -13,6 +13,7 @@ from aiogram.dispatcher import Dispatcher
 from aiogram.types.message import ContentType
 from aiogram.utils.markdown import text, bold, italic, code, pre
 from aiogram.types import ParseMode, InputMediaPhoto, InputMediaVideo, ChatActions
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from config import TOKEN
 from config import PROXY_URL
@@ -24,18 +25,6 @@ logging.basicConfig(format=u'%(filename)s [ LINE:%(lineno)+3s ]#%(levelname)+8s 
 # pass to bot token and proxy url
 bot = Bot(token=TOKEN, proxy=PROXY_URL)
 dp = Dispatcher(bot)
-
-
-# CAT_BIG_EYES = 'AgADAgAD_KoxG9VJMEqByuFKwZlSkG9lXw8ABCdYNkU_W2ZmWgkBAAEC'
-# KITTENS = [
-#     	'AgADAgAD_aoxG9VJMEoIiQjQLgjpcONKXw8ABMOanJERB_J2zw0BAAEC',
-#     	'AgADAgAD_qoxG9VJMEqTwmaPrmhXKmF6Xw8ABIq2wgu_QkBM-goBAAEC',
-#     	'AgADAgAD_6oxG9VJMErIQz69tr_T_YJJXw8ABJdloSdtDWQkGg0BAAEC',
-# ]
-# VOICE = 'AwADAgAD4QIAAtVJMEr4Bi9pw4knCQI'
-# VIDEO = 'BAADAgAD4gIAAtVJMEqg74p_y4OvdgI'
-# TEXT_FILE = 'BQADAgAD3wIAAtVJMEqvW4ozbMQXhAI'
-# VIDEO_NOTE = 'DQADAgAD4AIAAtVJMEp6uTbz3KrD_gI'
 
 
 # Create function which process connand /start
@@ -59,7 +48,7 @@ async def process_weather_command(message: types.Message):
     town_O = 'Омск'
     town_P = 'Петухово'
     town_S = 'Шерегеш'
-    owm = pyowm.OWM('70732ac514bf006244ac74c5f31de5aa', language='en')
+    owm = pyowm.OWM('70732ac514bf006244ac74c5f31de5aa', language='ru')
     obs_M = owm.weather_at_place(town_M)
     obs_E = owm.weather_at_place(town_E)
     obs_O = owm.weather_at_place(town_O)
@@ -231,6 +220,7 @@ async def process_goodbye_command(message: types.Message):
 # Create function which process another connand
 @dp.message_handler(regexp=r"/(.+)")
 async def process_crypto_ticker_command(message: types.Message):
+    print(message)
     url = 'https://api.coinmarketcap.com/v1/ticker{}'.format(message['text'])
     result = requests.get(url).json()
     name = result[0] ['name']
@@ -259,6 +249,60 @@ async def unknown_message(msg: types.Message):
                         italic('\nЯ просто напомню,'), 'что есть',
                         code('команда'), '/help')
     await msg.reply(message_text, parse_mode=ParseMode.MARKDOWN)
+
+
+# Define the function that sends weather to the chat on a schedule
+@dp.message_handler()
+async def sched():
+    town_M = 'Москва'
+    town_E = 'Екатеринбург'
+    town_O = 'Омск'
+    town_P = 'Петухово'
+    town_S = 'Шерегеш'
+    owm = pyowm.OWM('70732ac514bf006244ac74c5f31de5aa', language='ru')
+    obs_M = owm.weather_at_place(town_M)
+    obs_E = owm.weather_at_place(town_E)
+    obs_O = owm.weather_at_place(town_O)
+    obs_P = owm.weather_at_place(town_P)
+    obs_S = owm.weather_at_place(town_S)
+    w_M = obs_M.get_weather()
+    w_E = obs_E.get_weather()
+    w_O = obs_O.get_weather()
+    w_P = obs_P.get_weather()
+    w_S = obs_S.get_weather()
+    temp_M = w_M.get_temperature('celsius')['temp']
+    temp_M = round(temp_M)
+    temp_E = w_E.get_temperature('celsius')['temp']
+    temp_E = round(temp_E)
+    temp_O = w_O.get_temperature('celsius')['temp']
+    temp_O = round(temp_O)
+    temp_P = w_P.get_temperature('celsius')['temp']
+    temp_P = round(temp_P)
+    temp_S = w_S.get_temperature('celsius')['temp']
+    temp_S = round(temp_S)
+    wind_M = w_M.get_wind()['speed']
+    wind_M = round(wind_M)
+    wind_E = w_E.get_wind()['speed']
+    wind_E = round(wind_E)
+    wind_O = w_O.get_wind()['speed']
+    wind_O = round(wind_O)
+    wind_P = w_P.get_wind()['speed']
+    wind_P = round(wind_P)
+    wind_S = w_S.get_wind()['speed']
+    wind_S = round(wind_S)
+    status_M = w_M.get_detailed_status()
+    status_E = w_E.get_detailed_status()
+    status_O = w_O.get_detailed_status()
+    status_P = w_P.get_detailed_status()
+    status_S = w_S.get_detailed_status()
+    msg = '<b>Москва:</b>\nt: {0}, w: {2:2} м/с, {1}.\n<b>Екатеринбург:</b>\nt: {3}, w: {5} м/с, {4}.\n<b>Омск:</b>\nt: {6}, w: {8} м/с, {7}.\n<b>Петухово:</b>\nt: {9}, w: {11} м/с, {10}.\n<b>Шерегеш:</b>\nt: {12}, w: {14:2} м/с, {13}.'.format( str(temp_M) + '°C', status_M, wind_M, str(temp_E) + '°C', status_E, wind_E, str(temp_O) + '°C', status_O, wind_O, str(temp_P) + '°C', status_P, wind_P, str(temp_S) + '°C', status_S, wind_S )
+    await bot.send_message(chat_id=-1001116481457, text=msg, parse_mode=ParseMode.HTML)
+
+
+# Create scheduler with interval 1 minute
+scheduler = AsyncIOScheduler()
+scheduler.add_job(sched, 'cron', day_of_week='mon-sun', hour=21, minute=33)
+scheduler.start()
 
 
 if __name__ == '__main__':
