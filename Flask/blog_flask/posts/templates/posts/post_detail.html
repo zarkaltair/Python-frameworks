@@ -12,5 +12,13 @@
 
 
 {% block content %}
-    {{ post.body }}
+    <div class="tags">
+        {% for tag in tags %}
+        <a class="btn btn-primary" href="{{ url_for('posts.tag_detail', slug=tag.slug) }}" role="button">{{ tag.name }}</a>
+        {% endfor %}
+    </div>
+
+    <div class="main-content">
+        {{ post.body }}
+    </div>
 {% endblock %}
