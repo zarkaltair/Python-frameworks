@@ -4,6 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
 
 
 app = Flask(__name__)
@@ -14,3 +17,11 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
+
+### Admin ###
+from models import *
+admin = Admin(app)
+# contact Post with admin panel
+admin.add_view(ModelView(Post, db.session))
+# contact Tag with admin panel
+admin.add_view(ModelView(Tag, db.session))
