@@ -36,6 +36,24 @@ def create_post():
     return render_template('posts/create_post.html', form=form)
 
 
+@posts.route('/<slug>/edit/', methods=['POST', 'GET'])
+def edit_post(slug):
+	# define post which need edit by slug
+	post = Post.query.filter(Post.slug==slug).first()
+
+	if request.method == 'POST':
+		# create form and fill it exist data
+		form = PostForm(formdata=request.form, obj=post)
+		# enter new data which use enter
+		form.populate_obj(post)
+		db.session.commit()
+
+		return redirect(url_for('posts.post_detail', slug=post.slug))
+
+	form = PostForm(obj=post)
+	return render_template('posts/edit_post.html', post=post, form=form)	
+
+
 @posts.route('/')
 def index():
     query = request.args.get('query')
