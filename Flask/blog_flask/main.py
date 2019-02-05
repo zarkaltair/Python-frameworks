@@ -9,5 +9,7 @@ import view
 # define url for blueprint
 app.register_blueprint(posts, url_prefix='/blog')
 
+
+# start our application
 if __name__ == "__main__":
     app.run()

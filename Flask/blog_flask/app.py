@@ -18,11 +18,15 @@ from flask import redirect, url_for, request
 
 # define main flask app
 app = Flask(__name__)
+# define dict from object Configuration
 app.config.from_object(Configuration)
 
 # define ORM and pass there our app
 db = SQLAlchemy(app)
 
+# appeal to the class constructor Migrate and pass two parametrs
+# app it is class instance Flask
+# db it is class instance SQLAlchemy
 migrate = Migrate(app, db)
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
@@ -68,6 +72,7 @@ class TagAdminView(AdminMixin, BaseModelView):
     form_columns = ['name', 'posts']
 
 
+# create admin panel
 admin = Admin(app, 'FlaskApp', url='/', index_view=HomeAdminView(name='Home'))
 # contact Post with admin panel
 admin.add_view(PostAdminView(Post, db.session))

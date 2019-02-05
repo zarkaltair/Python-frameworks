@@ -7,30 +7,38 @@ from flask_security import UserMixin, RoleMixin
 
 # difine function which forms slug
 def slugify(s):
+    # string with r it is raw string
     pattern = r'[^\w+]'
     return re.sub(pattern, '-', s)
 
 
+# this variable is class instance Table
+# post_tags is name of table in database
 post_tags = db.Table('post_tags',
-                     db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
-                     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
-    )
+    db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
+)
 
 
-# create class which forms post
+# create class which forms post and save their to database
 class Post(db.Model):
+    # define propertis of post
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140))
     slug = db.Column(db.String(140), unique=True)
     body = db.Column(db.Text)
     created = db.Column(db.DateTime, default=datetime.now())
 
-
+    # *args it is list of arguments
+    # **kwargs it is dict of named argument (key words) 
     def __init__(self, *args, **kwargs):
+        # call super class from Post and get class instance
         super(Post, self).__init__(*args, **kwargs)
         self.generate_slug()
 
-
+    # create relationship between tags and posts
+    # 'Tag' is name of table in db
+    # lazy='dynamic' extands functionl standart list, type=BaseQuery
     tags = db.relationship('Tag', secondary=post_tags, backref=db.backref('posts', lazy='dynamic'))
 
 
@@ -39,7 +47,7 @@ class Post(db.Model):
         if self.title:
             self.slug = slugify(self.title)
 
-
+    # function that converts our output for convenience
     def __repr__(self):
         return '<Post id {}, title: {}>'.format(self.id, self.title)
 
@@ -50,12 +58,13 @@ class Tag(db.Model):
     name = db.Column(db.String(100))
     slug = db.Column(db.String(100))
 
-
+    # function which generate slug
     def __init__(self, *args, **kwargs):
+        # call super class from Tag and get class instance
         super(Tag, self).__init__(*args, **kwargs)
         self.slug = slugify(self.name)
 
-
+    # function that converts our output for convenience
     def __repr__(self):
         return '{}'.format(self.name)
 
