@@ -37,11 +37,23 @@
                 </li>
 
                 <li {% if title == title %} class="nav-item active" {% endif %}>
-                    <a class="nav-link" href="{{ url_for('posts.create_post') }}">New post</a>
+                    <a class="nav-link" href="{{ url_for('posts.create_post') }}">Login</a>
+                </li>                
+
+            </ul>
+        
+            <!-- Button to create new post -->
+            <ul class="navbar-nav mr-1 mt-2 mt-lg-0">
+                
+                <!-- Define if current user is admin to create post -->
+                <li {% if title == title %} class="nav-item active" {% endif %}>
+                    {% if current_user.has_role('admin') %}
+                        <a class="nav-link" href="/admin">Admin</a>
+                    {% endif %}
                 </li>
 
             </ul>
-            
+
             <!-- Search form -->
             <form class="form-inline my-2 my-lg-0" method="GET">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" name="query" value="{{ request.args.get('query', '') }}">
@@ -51,19 +63,20 @@
         </div>
     </nav>
 
+    <!-- Main section -->
     <div class="container">
-        <div class="row" style="display: block">
+        <div class="row" style="display: block; margin-top: 1.5rem;">
+            <div class="offset-md-3 col-md-6">
+                <h1>
+                    {% block content_title %}
 
-            <h1>
-                {% block content_title %}
+                    {% endblock %}
+                </h1>
+
+                {% block content %}
 
                 {% endblock %}
-            </h1>
-
-            {% block content %}
-
-            {% endblock %}
-            
+            </div>
         </div>
     </div>
 
