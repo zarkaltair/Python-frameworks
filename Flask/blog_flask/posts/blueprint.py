@@ -14,7 +14,9 @@ from app import db
 posts = Blueprint('posts', __name__, template_folder='templates')
 
 
+# function to create post who get methods POST and GET
 @posts.route('/create', methods=['POST', 'GET'])
+# decorator for login user
 @login_required
 def create_post():
     # request for method POST
@@ -39,11 +41,13 @@ def create_post():
     return render_template('posts/create_post.html', form=form)
 
 
+# function to edit post who get methods POST adn GET
 @posts.route('/<slug>/edit/', methods=['POST', 'GET'])
+# decorator for login user
 @login_required
 def edit_post(slug):
 	# define post which need edit by slug
-	post = Post.query.filter(Post.slug==slug).first()
+	post = Post.query.filter(Post.slug==slug).first_or_404()
 
 	if request.method == 'POST':
 		# create form and fill it exist data
@@ -58,6 +62,7 @@ def edit_post(slug):
 	return render_template('posts/edit_post.html', post=post, form=form)	
 
 
+# function to define main way
 @posts.route('/')
 def index():
     query = request.args.get('query')
@@ -81,15 +86,17 @@ def index():
     return render_template('posts/index.html', pages=pages)
 
 
+# function
 @posts.route('/<slug>')
 def post_detail(slug):
-    post = Post.query.filter(Post.slug==slug).first()
+    post = Post.query.filter(Post.slug==slug).first_or_404()
     tags = post.tags
     return render_template('posts/post_detail.html', post=post, tags=tags)
 
 
+# function
 @posts.route('/tag/<slug>')
 def tag_detail(slug):
-    tag = Tag.query.filter(Tag.slug==slug).first()
+    tag = Tag.query.filter(Tag.slug==slug).first_or_404()
     posts = tag.posts.all()
     return render_template('posts/tag_detail.html', tag=tag, posts=posts)

@@ -5,6 +5,7 @@ import re
 from flask_security import UserMixin, RoleMixin
 
 
+# difine function which forms slug
 def slugify(s):
     pattern = r'[^\w+]'
     return re.sub(pattern, '-', s)
@@ -16,6 +17,7 @@ post_tags = db.Table('post_tags',
     )
 
 
+# create class which forms post
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140))
@@ -32,6 +34,7 @@ class Post(db.Model):
     tags = db.relationship('Tag', secondary=post_tags, backref=db.backref('posts', lazy='dynamic'))
 
 
+    # function which generate slug
     def generate_slug(self):
         if self.title:
             self.slug = slugify(self.title)
@@ -41,6 +44,7 @@ class Post(db.Model):
         return '<Post id {}, title: {}>'.format(self.id, self.title)
 
 
+# create class which forms tag
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -58,12 +62,14 @@ class Tag(db.Model):
 
 ### Flask security ###
 
+# create new table which define users and thier roles
 roles_users = db.Table('roles_users',
         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
         db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
     )
 
 
+# create class user with his properties
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.String(100), unique=True)
@@ -72,6 +78,7 @@ class User(db.Model, UserMixin):
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
 
+# define users roles
 class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(100), unique=True)
