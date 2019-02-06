@@ -6,8 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config.update(
     CELERY_BROKER_URL='amqp://localhost//',
-    CELERY_RESULT_BACKEND='sqlite:////tmp/test.db',
-    SQLALCHEMY_DATABASE_URI='sqlite:////tmp/test.db'
+    CELERY_RESULT_BACKEND='db+mysql://root:123456789@localhost/test2',
+    SQLALCHEMY_DATABASE_URI='db+mysql://root:123456789@localhost/test2'
 )
 celery = make_celery(app)
 db = SQLAlchemy(app)
