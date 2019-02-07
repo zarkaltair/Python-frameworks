@@ -2,6 +2,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
+# display options for pandas
+pd.options.display.max_rows = 10
+pd.options.display.max_columns = 10
+pd.options.display.expand_frame_repr = False
+
 # Группировка данных один из самых часто используемых методов при анализе данных. В pandas за группировку отвечает метод .groupby.
 titanic_df = pd.read_csv('titanic.csv')
 print(titanic_df.head())
@@ -20,7 +25,7 @@ pvt = titanic_df.pivot_table(index=['Sex'], columns=['PClass'], values='Name', a
 print(pvt.loc['female', ['1st', '2nd', '3rd']])
 print()
 
-# Анализ временных рядов
+# Анализ временных рядов на примере акций Apple
 df = pd.read_csv('apple.csv', index_col='Date', parse_dates=True)
 df = df.sort_index()
 print(df.info())
