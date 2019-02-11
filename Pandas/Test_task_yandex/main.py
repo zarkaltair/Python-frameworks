@@ -1,93 +1,89 @@
 import pandas as pd
+import numpy as np
 import datetime
 import re
-import matplotlib.pyplot as plt
 
 from pprint import pprint
+from matplotlib import pyplot
 from collections import Counter
 
 
 # display options for output pandas
-pd.options.display.max_rows = 10
+pd.options.display.max_rows = 100000
 pd.options.display.max_columns = 10
 pd.options.display.expand_frame_repr = False
 
+# ([\'\\"`�|#*$&<^>/_:;()~=%@+?,0-9A-Z\-a-z\.]*) - - \[([0-9A-Za-z\/\:]*) -[0-9]*\] ([0-9A-Za-z\'\\\]\"`�|#*$t̓&<^>/_:;()~=%@+?,/\.\- ]*\") ([0-9]*) ([0-9\-]*)
 
+# create parser for non-standard format time
+parser = lambda date: pd.datetime.strptime(date, '%d/%b/%Y:%H:%M:%S')
+# define pattern for regular expression
+pattern_for_log = r'(.+) - - \[(.+) -[0-9]*\] (.+) (.+) (.+)'
 # Task 1 and 2 read the file and parse it in DataFrame with separate to space and named columns
-df = pd.read_table('log', sep=' ', 
-						  names=['Date and Time','Time code','URL', 'Code', 'Size'], 
-						  engine='python', 
-						  error_bad_lines=False
-	) # access_log_jul95
-# reset index
-df = df.reset_index()
+df = pd.read_table('access_log_Jul95', sep=pattern_for_log, 
+					names=['None', 'IP/Domain name', 'Date and Time', 'URL', 'Code', 'Size'], 
+					index_col=False, 
+					engine='python', 
+					error_bad_lines=False, 
+					parse_dates=[2], 
+					date_parser=parser, 
+) # access_log_Jul95
+
 # delete unnecessary columns
-df = df.drop(['level_1'], axis='columns')
-df = df.drop(['level_2'], axis='columns')
-# concatenate Date column with Time column
-# df['Date and Time'] = df['IP'] + '' + df['Date']
-# delete IP column and Date column
-df = df.drop(['Time code'], axis='columns')
-# df = df.drop(['Date'], axis='columns')
-# rename column
-df = df.rename(columns={'level_0': 'IP'})
+df = df.drop(['None'], axis='columns')
+# replace all NaN elements with 0
+df = df.fillna(0)
+# replace all '-' elements with 0
+df['Size'] = df['Size'].replace({'-': 0})
 
 
-# Task 3 with method Counter count quantity repeat to URL
+# Task 3 with method Counter count quantity repeat to each URL
 count_repeat_to_url = Counter([i for i in df['URL']])
 
 
 # Task 4 to 15 most visited url
 most_visited_url = count_repeat_to_url.most_common(15)
-# print(most_visited_url)
+df_url = pd.DataFrame(most_visited_url, columns=['URL','Quantity'])
+print(df_url)
 
 
-# Task 5 
+# Task 5 define quantity requests
+quantity_requests = int(df['Code'].count())
+# create array with all date and time
 array_time_string_by_log = [i for i in df['Date and Time']]
-array_time = []
-for time_string in array_time_string_by_log:
-	# define pattern for regular expression
-	pattern = r'[^\d]'
-	# find the regular expression pattern in the string and remove all unnecessary
-	# split that string into spaces using the method .sub
-	d = re.sub(pattern, ' ', time_string).split(' ')
-	# define date and time in the string
-	time_request = [int(i) for i in d if i.isdigit() and int(i) < 100]
-	# append our time_request to array_time
-	array_time.append(time_request)
-
-# define time to start and finish requests
-time_start = array_time[0][0] * 60 * 60 * 24 + array_time[0][-1]
-time_finish = array_time[-1][0] * 60 * 60 * 24 + array_time[-1][1] * 60 * 60 + array_time[-1][2] * 60 + array_time[-1][-1]
-
+# convert first and last time request
+time_start = array_time_string_by_log[0]
+time_finish = array_time_string_by_log[-1]
+# define delta time
+delta_time = pd.to_timedelta((time_finish - time_start), unit='S', box=False)
+# convert delta time to int64 type
+delta_time_int64 = delta_time.astype('timedelta64[s]').astype(int)
 # define quantity request per second
-quantity_request_per_second = (time_finish - time_start) / len(array_time_string_by_log)
-# print(quantity_request_per_second)
+quantity_requests_per_second = quantity_requests / delta_time_int64
+print('Quantity requests per second: ' + str(round(quantity_requests_per_second, 2)))
 
 
-
-# Task 6 
-# df_plot = df.loc['0': '100', ['Date and Time']]
-# df_plot = df.plot.scatter(x=array_time, y='IP')
-# plt.show()
-
-
-# Task 7 
-
-
-
-
-# pprint(count_repeat_to_url)
-# pprint(most_visited_url)
-# pprint(quantity_request_per_second)
+# Task 6 graph of requests per second
+time = [i for i in df['Date and Time']]
+count = [i for i in range(len(df['Date and Time']))]
+# properties for plotting
+fig, ax = pyplot.subplots()
+ax.plot(time, count)
+ax.set(xlabel='Time', 
+	   ylabel='Quantity requests',
+       title='Graph of requests per second')
+ax.grid()
+pyplot.show()
 
 
-t1 = '[01/Jul/1995:00:00:01'
-t2 = '[03/Jul/1995:04:02:51'
-time1 = pd.to_datetime(t1[1:], format='%d/%b/%Y:%H:%M:%S')
-time2 = pd.to_datetime(t2[1:], format='%d/%b/%Y:%H:%M:%S')
-print(time2 - time1)
-
-
+# Task 7 create histogram of requests size distribution
+n, bins, pathes = pyplot.hist(df['Size'], int(df['Size'].count()), facecolor='g', alpha=0.85)
+# properties for plotting
+pyplot.xlabel('Request size')
+pyplot.ylabel('Quantity requests')
+pyplot.title('Histogram of requests size distribution')
+pyplot.axis([0, df['Size'].max(), 0, Counter([i for i in df['Size']]).most_common(1)[0][1]])
+pyplot.grid(True)
+pyplot.show()
 
 # print(df)
