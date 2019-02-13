@@ -98,11 +98,3 @@ dave.dev1.ihub.com - - [01/Jul/1995:00:01:58 -0400] "GET /images/NASA-logosmall.
 dave.dev1.ihub.com - - [01/Jul/1995:00:01:58 -0400] "GET /images/KSC-logosmall.gif HTTP/1.0" 200 1204
 dave.dev1.ihub.com - - [01/Jul/1995:00:01:58 -0400] "GET /shuttle/countdown/count.gif HTTP/1.0" 200 40310
 pm13.j51.com - - [01/Jul/1995:00:01:58 -0400] "GET /shuttle/missions/sts-71/movies/crew-arrival-t38.mpg HTTP/1.0" 200 305722
-eco.cgrer.uiowa.edu - - [07/Jul/1995:00:52:35 -0400] "GET /shuttle/miss/sts-62/mission-sts-62.html HTTP/1.0" 404 -
-p12.haifa1.actcom.co.il - - [07/Jul/1995:17:49:26 -0400] "GET /shuttle/resources/orbiters/†b×  HTTP/1.0" 404 -
-klothos.crl.research.digital.com - - [10/Jul/1995:16:45:50 -0400] "" 400 -
-algol.ksc.nasa.gov - - [13/Jul/1995:10:49:29 -0400] "GET /shuttle/missions/sts-70/movies/ HTTP/1.0" 404 -
-202.251.172.60 - - [14/Jul/1995:04:10:23 -0400] "GET /shuttle/missions/sts-65/mission-sts-65.htmlhþ§Š ’žŽ‡||(­ HTTP/1.0" 404 -
-163.205.12.75 - - [19/Jul/1995:08:36:42 -0400] "GET /Lî€þîN^NuNV HTTP/1.0" 404 -
-128.159.122.20 - - [20/Jul/1995:15:28:50 -0400] "kƒûtxƒûtGƒûtÍƒû" 400 -
-128.159.122.20 - - [24/Jul/1995:13:52:50 -0400] "kƒûtxƒûtGƒûtÍƒû" 400 -

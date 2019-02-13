@@ -9,18 +9,18 @@ from collections import Counter
 
 
 # display options for output pandas
-pd.options.display.max_rows = 100000
+pd.options.display.max_rows = 10
 pd.options.display.max_columns = 10
 pd.options.display.expand_frame_repr = False
 
-# ([\'\\"`�|#*$&<^>/_:;()~=%@+?,0-9A-Z\-a-z\.]*) - - \[([0-9A-Za-z\/\:]*) -[0-9]*\] ([0-9A-Za-z\'\\\]\"`�|#*$t̓&<^>/_:;()~=%@+?,/\.\- ]*\") ([0-9]*) ([0-9\-]*)
 
 # create parser for non-standard format time
 parser = lambda date: pd.datetime.strptime(date, '%d/%b/%Y:%H:%M:%S')
 # define pattern for regular expression
 pattern_for_log = r'(.+) - - \[(.+) -[0-9]*\] (.+) (.+) (.+)'
 # Task 1 and 2 read the file and parse it in DataFrame with separate to space and named columns
-df = pd.read_table('access_log_Jul95', sep=pattern_for_log, 
+df = pd.read_table('access_log_Jul95', 
+					sep=pattern_for_log, 
 					names=['None', 'IP/Domain name', 'Date and Time', 'URL', 'Code', 'Size'], 
 					index_col=False, 
 					engine='python', 
@@ -28,7 +28,8 @@ df = pd.read_table('access_log_Jul95', sep=pattern_for_log,
 					parse_dates=[2], 
 					date_parser=parser, 
 ) # access_log_Jul95
-
+# set index Date and Time
+# df = df.set_index('Date and Time')
 # delete unnecessary columns
 df = df.drop(['None'], axis='columns')
 # replace all NaN elements with 0
@@ -49,11 +50,9 @@ print(df_url)
 
 # Task 5 define quantity requests
 quantity_requests = int(df['Code'].count())
-# create array with all date and time
-array_time_string_by_log = [i for i in df['Date and Time']]
-# convert first and last time request
-time_start = array_time_string_by_log[0]
-time_finish = array_time_string_by_log[-1]
+# find first and last time request
+time_start = df['Date and Time'].iloc[0]
+time_finish = df['Date and Time'].iloc[-1]
 # define delta time
 delta_time = pd.to_timedelta((time_finish - time_start), unit='S', box=False)
 # convert delta time to int64 type
@@ -62,28 +61,38 @@ delta_time_int64 = delta_time.astype('timedelta64[s]').astype(int)
 quantity_requests_per_second = quantity_requests / delta_time_int64
 print('Quantity requests per second: ' + str(round(quantity_requests_per_second, 2)))
 
-
 # Task 6 graph of requests per second
-time = [i for i in df['Date and Time']]
+time = df['Date and Time']
+# time = [i for i in df['Date and Time']]
 count = [i for i in range(len(df['Date and Time']))]
 # properties for plotting
 fig, ax = pyplot.subplots()
 ax.plot(time, count)
 ax.set(xlabel='Time', 
 	   ylabel='Quantity requests',
-       title='Graph of requests per second')
+       title='Graph of requests per second'
+)
 ax.grid()
 pyplot.show()
 
 
 # Task 7 create histogram of requests size distribution
-n, bins, pathes = pyplot.hist(df['Size'], int(df['Size'].count()), facecolor='g', alpha=0.85)
+df = df.set_index('Date and Time')
+# convert all Size elements to integer
+df['Size'] = df['Size'].apply(int)
+# resize column to 1 day
+days_df = df.resample('1d')['Size'].mean()
 # properties for plotting
-pyplot.xlabel('Request size')
-pyplot.ylabel('Quantity requests')
-pyplot.title('Histogram of requests size distribution')
-pyplot.axis([0, df['Size'].max(), 0, Counter([i for i in df['Size']]).most_common(1)[0][1]])
-pyplot.grid(True)
+fig, ax = pyplot.subplots()
+ax.barh(days_df.index, days_df, align='center', height=0.5)
+labels = ax.get_xticklabels()
+# prooerties for figure
+ax.set(xlabel='Request size, bytes', 
+	   ylabel='Quantity times, days', 
+       title='Histogram of requests size distribution')
 pyplot.show()
 
-# print(df)
+
+# t1 = datetime.datetime.now()
+# t2 = datetime.datetime.now()
+# print(t2 - t1)
