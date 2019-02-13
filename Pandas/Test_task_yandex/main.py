@@ -1,9 +1,5 @@
 import pandas as pd
-import numpy as np
-import datetime
-import re
 
-from pprint import pprint
 from matplotlib import pyplot
 from collections import Counter
 
@@ -27,14 +23,12 @@ df = pd.read_table('access_log_Jul95',
 					error_bad_lines=False, 
 					parse_dates=[2], 
 					date_parser=parser, 
-) # access_log_Jul95
-# set index Date and Time
-# df = df.set_index('Date and Time')
+)
 # delete unnecessary columns
 df = df.drop(['None'], axis='columns')
 # replace all NaN elements with 0
 df = df.fillna(0)
-# replace all '-' elements with 0
+# replace all '-' elements with 0 in Size column
 df['Size'] = df['Size'].replace({'-': 0})
 
 
@@ -61,16 +55,16 @@ delta_time_int64 = delta_time.astype('timedelta64[s]').astype(int)
 quantity_requests_per_second = quantity_requests / delta_time_int64
 print('Quantity requests per second: ' + str(round(quantity_requests_per_second, 2)))
 
+
 # Task 6 graph of requests per second
 time = df['Date and Time']
-# time = [i for i in df['Date and Time']]
 count = [i for i in range(len(df['Date and Time']))]
 # properties for plotting
-fig, ax = pyplot.subplots()
+fig, ax = pyplot.subplots(figsize=(18, 9))
 ax.plot(time, count)
-ax.set(xlabel='Time', 
-	   ylabel='Quantity requests',
-       title='Graph of requests per second'
+ax.set(xlabel='Time, seconds', 
+	   ylabel='Quantity requests, pieces', 
+       title='Graph of requests per second', 
 )
 ax.grid()
 pyplot.show()
@@ -83,16 +77,13 @@ df['Size'] = df['Size'].apply(int)
 # resize column to 1 day
 days_df = df.resample('1d')['Size'].mean()
 # properties for plotting
-fig, ax = pyplot.subplots()
+fig, ax = pyplot.subplots(figsize=(18, 9))
 ax.barh(days_df.index, days_df, align='center', height=0.5)
 labels = ax.get_xticklabels()
 # prooerties for figure
 ax.set(xlabel='Request size, bytes', 
 	   ylabel='Quantity times, days', 
-       title='Histogram of requests size distribution')
+       title='Histogram of requests size distribution', 
+)
+ax.grid()
 pyplot.show()
-
-
-# t1 = datetime.datetime.now()
-# t2 = datetime.datetime.now()
-# print(t2 - t1)
