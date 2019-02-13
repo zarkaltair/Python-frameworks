@@ -20,7 +20,7 @@ parser = lambda date: pd.datetime.strptime(date, '%d/%b/%Y:%H:%M:%S')
 # define pattern for regular expression
 pattern_for_log = r'(.+) - - \[(.+) -[0-9]*\] (.+) (.+) (.+)'
 # Task 1 and 2 read the file and parse it in DataFrame with separate to space and named columns
-df = pd.read_table('access_log_Jul95', sep=pattern_for_log, 
+df = pd.read_table('log', sep=pattern_for_log, 
 					names=['None', 'IP/Domain name', 'Date and Time', 'URL', 'Code', 'Size'], 
 					index_col=False, 
 					engine='python', 
@@ -75,7 +75,6 @@ ax.set(xlabel='Time',
 ax.grid()
 pyplot.show()
 
-
 # Task 7 create histogram of requests size distribution
 n, bins, pathes = pyplot.hist(df['Size'], int(df['Size'].count()), facecolor='g', alpha=0.85)
 # properties for plotting
@@ -86,4 +85,6 @@ pyplot.axis([0, df['Size'].max(), 0, Counter([i for i in df['Size']]).most_commo
 pyplot.grid(True)
 pyplot.show()
 
+'''
 # print(df)
+'''
