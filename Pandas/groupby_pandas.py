@@ -27,6 +27,7 @@ print()
 
 # Анализ временных рядов на примере акций Apple
 df = pd.read_csv('apple.csv', index_col='Date', parse_dates=True)
+print(df)
 df = df.sort_index()
 print(df.info())
 print()
