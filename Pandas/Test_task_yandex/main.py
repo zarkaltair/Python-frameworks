@@ -9,11 +9,12 @@ pd.options.display.max_rows = 10
 pd.options.display.max_columns = 10
 pd.options.display.expand_frame_repr = False
 
+# ([0-9A-Z\a-z]*) - - \[(.+) -[0-9]*\] (.+) (\d+) (\d+)|(\w+.\w)
 
 # create parser for non-standard format time
 parser = lambda date: pd.datetime.strptime(date, '%d/%b/%Y:%H:%M:%S')
 # define pattern for regular expression
-pattern_for_log = r'(.+) - - \[(.+) -[0-9]*\] (.+) (.+) (.+)'
+pattern_for_log = r'(.+) - - \[(.+) -[0-9]*\] (.+) (.+) (.+)|(\w+.\w)'
 # Task 1 and 2 read the file and parse it in DataFrame with separate to space and named columns
 df = pd.read_table('access_log_Jul95', 
 					sep=pattern_for_log, 
@@ -87,3 +88,5 @@ ax.set(xlabel='Request size, bytes',
 )
 ax.grid()
 pyplot.show()
+
+print(df)
