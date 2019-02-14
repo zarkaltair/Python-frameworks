@@ -9,7 +9,6 @@ pd.options.display.max_rows = 10
 pd.options.display.max_columns = 10
 pd.options.display.expand_frame_repr = False
 
-# ([0-9A-Z\a-z]*) - - \[(.+) -[0-9]*\] (.+) (\d+) (\d+)|(\w+.\w)
 
 # create parser for non-standard format time
 parser = lambda date: pd.datetime.strptime(date, '%d/%b/%Y:%H:%M:%S')
@@ -17,13 +16,13 @@ parser = lambda date: pd.datetime.strptime(date, '%d/%b/%Y:%H:%M:%S')
 pattern_for_log = r'(.+) - - \[(.+) -[0-9]*\] (.+) (.+) (.+)|(\w+.\w)'
 # Task 1 and 2 read the file and parse it in DataFrame with separate to space and named columns
 df = pd.read_table('access_log_Jul95', 
-					sep=pattern_for_log, 
-					names=['None', 'IP/Domain name', 'Date and Time', 'URL', 'Code', 'Size'], 
-					index_col=False, 
-					engine='python', 
-					error_bad_lines=False, 
-					parse_dates=[2], 
-					date_parser=parser, 
+                    sep=pattern_for_log, 
+                    names=['None', 'IP/Domain name', 'Date and Time', 'URL', 'Code', 'Size'], 
+                    index_col=False, 
+                    engine='python', 
+                    error_bad_lines=False, 
+                    parse_dates=[2], 
+                    date_parser=parser, 
 )
 # delete unnecessary columns
 df = df.drop(['None'], axis='columns')
@@ -64,7 +63,7 @@ count = [i for i in range(len(df['Date and Time']))]
 fig, ax = pyplot.subplots(figsize=(18, 9))
 ax.plot(time, count)
 ax.set(xlabel='Time, seconds', 
-	   ylabel='Quantity requests, pieces', 
+       ylabel='Quantity requests, pieces', 
        title='Graph of requests per second', 
 )
 ax.grid()
@@ -83,7 +82,7 @@ ax.barh(days_df.index, days_df, align='center', height=0.5)
 labels = ax.get_xticklabels()
 # prooerties for figure
 ax.set(xlabel='Request size, bytes', 
-	   ylabel='Quantity times, days', 
+       ylabel='Quantity times, days', 
        title='Histogram of requests size distribution', 
 )
 ax.grid()
