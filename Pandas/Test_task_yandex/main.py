@@ -88,5 +88,3 @@ ax.set(xlabel='Request size, bytes',
 )
 ax.grid()
 pyplot.show()
-
-print(df)
