@@ -62,7 +62,7 @@ ax2[0].set_title('Global reactive power')
 ax2[0].set_xlabel('Time, min')
 ax2[0].set_ylabel('Power, kw')
 ax2[0].legend()
-ax1[1].grid(True)
+ax2[0].grid(True)
 
 # subplot 4
 ax2[1].set_title('Individual measurements')
