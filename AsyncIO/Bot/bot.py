@@ -1,4 +1,6 @@
 # Add all libraries for the bot
+import json
+import apiai
 import pyowm
 import asyncio
 import logging
@@ -16,6 +18,7 @@ from aiogram.types import ParseMode, InputMediaPhoto, InputMediaVideo, ChatActio
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from config import TOKEN
+from config import TOKEN_DIALOGFLOW
 from config import PROXY_URL
 
 
@@ -235,6 +238,25 @@ async def process_crypto_ticker_command(message: types.Message):
     change_7d = result[0] ['percent_change_7d']
     msg = '<code>{0:20}{1}\n{2:20}#{3}\n{4:20}{5}\n{6:20}${7}\n{8:20}${9}\n{10:20}{11}%\n{12:20}{13}%\n{14:20}{15}%</code>'.format('Coin name:', name,'Market ticker:', symbol, 'Price BTC:', price_btc, 'Price USD:', price, 'Market cap:', market, 'Change 1h:', change_1h, 'Change 24h:', change_24h, 'Change 7d:', change_7d )
     await bot.send_message(message.chat.id, msg, parse_mode=ParseMode.HTML)
+
+
+# Create function which process any text message from user
+# and resend their to Dialogflow
+@dp.message_handler()
+async def dialog_flow_message(message: types.Message):
+    request = apiai.ApiAI(TOKEN_DIALOGFLOW).text_request()
+    request.lang = 'ru'
+    request.session_id = 'Test_session_1'
+    request.query = message['text']
+    responseJson = json.loads(request.getresponse().read().decode('utf-8'))
+    msg = responseJson['result']['fulfillment']['speech']
+    
+    if msg:
+        await bot.send_message(message.chat.id, msg, parse_mode=ParseMode.HTML)
+    else:
+        msg = 'Ты чо мелешь паскуда?'
+        await bot.send_message(message.chat.id, msg, parse_mode=ParseMode.HTML)
+
 
 # Create function which process any text message from user
 @dp.message_handler()
