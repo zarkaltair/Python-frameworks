@@ -1,0 +1,6 @@
+aiohttp
+asyncio
+asyncpg
+celery
+redis
+uvloop
