@@ -4,3 +4,4 @@ asyncpg
 celery
 redis
 uvloop
+requests
