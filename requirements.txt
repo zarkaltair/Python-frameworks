@@ -5,3 +5,5 @@ celery
 redis
 uvloop
 requests
+pandas
+lxml
