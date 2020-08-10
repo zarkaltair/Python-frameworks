@@ -7,3 +7,4 @@ uvloop
 requests
 pandas
 lxml
+rq
